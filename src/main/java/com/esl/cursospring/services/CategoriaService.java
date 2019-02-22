@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.esl.cursospring.domain.Categoria;
 import com.esl.cursospring.repositories.CategoriaRepository;
+import com.esl.cursospring.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class CategoriaService {
@@ -18,8 +19,19 @@ public class CategoriaService {
 	
 	public Categoria buscar(Integer id) {
 		Optional<Categoria> obj = repo.findById(id);
-		return obj.orElse(null);
+		return obj.orElseThrow(() -> new ObjectNotFoundException(
+		"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
 		
+		/*
+		 * Retorna o objeto se exitir ou jogar uma exceção caso não exista
+		 * usa-se uma função lambda para retronar a exceção
+		 */
+		
+		
+		/*
+		 * Optional<Categoria> obj = repo.findById(id);
+		return obj.orElse(null);
+		 */
 		/*
 		 * O SpringBoot a partir da versão 2.x passou a usar o java 8 e com isso
 		 * usa o objeto Optional(Container, encapsula se o objeto está instaciado ou não(null))
