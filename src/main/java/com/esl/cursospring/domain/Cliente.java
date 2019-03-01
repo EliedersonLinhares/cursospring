@@ -34,6 +34,10 @@ public class Cliente implements Serializable {
 	private List<Endereco> enderecos = new ArrayList<>();
 	
 	
+	@OneToMany(mappedBy="cliente")
+	private List<Pedido> pedidos = new ArrayList<>();//Lista não se coloca nos construtores
+	
+	
 	/*
 	 * Implementação de uma classe fraca
 	 * 
@@ -112,6 +116,15 @@ public class Cliente implements Serializable {
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
 	}
+	
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
+	}
+	
 
 	@Override
 	public int hashCode() {
@@ -137,7 +150,8 @@ public class Cliente implements Serializable {
 			return false;
 		return true;
 	}
-	
+
+
 	
 	
 }
