@@ -2,7 +2,9 @@ package com.esl.cursospring.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -31,6 +34,11 @@ public class Produto implements Serializable {
 	           inverseJoinColumns = @JoinColumn(name = "categoria_id")) //segunda chave estrangeira que ira referenciar a classe categoria)
 	private List<Categoria> categorias = new ArrayList<>();
 	
+	@OneToMany(mappedBy="id.produto")
+	private Set<ItemPedido> itens = new HashSet<>();//garante que não havera item repetido
+	
+
+	
 	public Produto() {
 		
 	}
@@ -41,6 +49,20 @@ public class Produto implements Serializable {
 		this.nome = nome;
 		this.preco = preco;
 	}
+	
+	
+	/*
+	 * Criação de um metodo que varrendos os ItensPedidos que montara uma
+	 * lista de pedidos associados a esses itens
+	 */
+	public List<Pedido> getPedidos(){
+		List<Pedido> lista = new ArrayList<>();//inicia uma lista de pedidos
+		for(ItemPedido x : itens) {//Percorre a lista intens
+			lista.add(x.GetPedido());//para cada itemPedido x  que exisitir na lista de itens,será adicionado o pedido associado a ele na lista
+		}
+		return lista;
+	}
+	
 
 	public Integer getId() {
 		return id;
@@ -73,6 +95,15 @@ public class Produto implements Serializable {
 	public void setCategorias(List<Categoria> categorias) {
 		this.categorias = categorias;
 	}
+	
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
+	
 
 	@Override
 	public int hashCode() {
@@ -98,7 +129,8 @@ public class Produto implements Serializable {
 			return false;
 		return true;
 	}
-	
+
+
 	
 
 }

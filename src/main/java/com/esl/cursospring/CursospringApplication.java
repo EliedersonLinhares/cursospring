@@ -14,6 +14,7 @@ import com.esl.cursospring.domain.Cidade;
 import com.esl.cursospring.domain.Cliente;
 import com.esl.cursospring.domain.Endereco;
 import com.esl.cursospring.domain.Estado;
+import com.esl.cursospring.domain.ItemPedido;
 import com.esl.cursospring.domain.Pagamento;
 import com.esl.cursospring.domain.PagamentoComBoleto;
 import com.esl.cursospring.domain.PagamentoComCartao;
@@ -26,6 +27,7 @@ import com.esl.cursospring.repositories.CidadeRepository;
 import com.esl.cursospring.repositories.ClienteRepository;
 import com.esl.cursospring.repositories.EnderecoRepository;
 import com.esl.cursospring.repositories.EstadoRepository;
+import com.esl.cursospring.repositories.ItemPedidoRepository;
 import com.esl.cursospring.repositories.PagamentoRepository;
 import com.esl.cursospring.repositories.PedidoRepository;
 import com.esl.cursospring.repositories.ProdutoRepository;
@@ -56,6 +58,9 @@ public class CursospringApplication implements CommandLineRunner{
 	
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(CursospringApplication.class, args);
@@ -123,6 +128,20 @@ public class CursospringApplication implements CommandLineRunner{
         
         pedidoRepository.saveAll(Arrays.asList(ped1,ped2));
         pagamentoRepository.saveAll(Arrays.asList(pagto1,pagto2));
+        
+        ItemPedido ip1 = new ItemPedido(ped1, p1, 0.00, 1, 2000.00);
+        ItemPedido ip2 = new ItemPedido(ped1, p3, 0.00, 2, 80.00);
+        ItemPedido ip3 = new ItemPedido(ped2, p2, 100.00, 1, 800.00);
+        
+        ped1.getItens().addAll(Arrays.asList(ip1,ip2));//pedido conhece seus itens
+        ped2.getItens().addAll(Arrays.asList(ip3));
+        
+        p1.getItens().addAll(Arrays.asList(ip1));//produto conhece sues itens
+        p2.getItens().addAll(Arrays.asList(ip3));
+        p3.getItens().addAll(Arrays.asList(ip3));
+        
+        itemPedidoRepository.saveAll(Arrays.asList(ip1,ip2,ip3));
+        
 	}
 
 }
