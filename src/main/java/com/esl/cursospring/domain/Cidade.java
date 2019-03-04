@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 public class Cidade implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -20,7 +18,9 @@ public class Cidade implements Serializable {
 	private Integer id;
 	private  String nome;
 	
-	@JsonManagedReference//Liberando a serialização do estado pela cidade
+	/*Utilizando soment o @jsonIgnore no back reference
+	 * @JsonManagedReference //permitir a serialização de produtos, referencia gerenciada pelo jSon,sendo feito no lado que se quer que aparecam os objetos assossiados 
+	 */
 	@ManyToOne
 	@JoinColumn(name="estado_id")
 	private Estado estado; 

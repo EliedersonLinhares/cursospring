@@ -15,8 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.esl.cursospring.domain.enums.TipoCliente;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Cliente implements Serializable {
@@ -30,11 +29,13 @@ public class Cliente implements Serializable {
 	private String cpfOuCnpj;
 	private Integer tipo;//Armazenado internamente um numero inteiro ao inves de um tipo cliente, sendo qeu para o sistema o dado exposto é um tipocliente
 	
-	@JsonManagedReference//Liberando a serialização de endereço pelo cliente
+	/*Utilizando soment o @jsonIgnore no back reference
+	 * @JsonManagedReference //permitir a serialização de produtos, referencia gerenciada pelo jSon,sendo feito no lado que se quer que aparecam os objetos assossiados 
+	 */
 	@OneToMany(mappedBy="cliente")
 	private List<Endereco> enderecos = new ArrayList<>();
 	
-	@JsonBackReference//pedidos do cliente não serão serializados
+	@JsonIgnore
 	@OneToMany(mappedBy="cliente")
 	private List<Pedido> pedidos = new ArrayList<>();//Lista não se coloca nos construtores
 	
