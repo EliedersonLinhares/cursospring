@@ -59,4 +59,13 @@ public class CategoriaResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE) // Notação para apagar dados
+	public ResponseEntity<Void> delete(@PathVariable Integer id) {
+	    
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	
+	}
+	
+	
 }
