@@ -25,9 +25,9 @@ public class CategoriaResource {
 	
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET) // http para obter dados
-	public ResponseEntity<?> find(@PathVariable Integer id) {
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 		
-		Categoria obj = service.buscar(id);//acessando p repository
+		Categoria obj = service.find(id);//acessando p repository
 		
 		return ResponseEntity.ok().body(obj);//retorna o ok com o corpo o objeto obj buscado
 	}
@@ -50,6 +50,13 @@ public class CategoriaResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).build();
+	}
+	
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)//Anotação para atualização
+	public ResponseEntity<Void> update(@RequestBody Categoria obj, @PathVariable Integer id){
+		obj.setId(id);
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
 	}
 	
 }

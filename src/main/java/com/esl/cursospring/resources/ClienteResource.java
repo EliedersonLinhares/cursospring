@@ -21,9 +21,9 @@ public class ClienteResource {
 	
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET) // http para obter dados
-	public ResponseEntity<?> find(@PathVariable Integer id) {
+	public ResponseEntity<Cliente> find(@PathVariable Integer id) {
 		
-		Cliente obj = service.buscar(id);//acessando p repository
+		Cliente obj = service.find(id);//acessando p repository
 		
 		return ResponseEntity.ok().body(obj);//retorna o ok com o corpo o objeto obj buscado
 	}
