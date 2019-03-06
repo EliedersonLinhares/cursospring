@@ -2,12 +2,16 @@ package com.esl.cursospring.resources;
 
 
 
+import java.net.URI;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.esl.cursospring.domain.Categoria;
 import com.esl.cursospring.services.CategoriaService;
@@ -37,5 +41,15 @@ public class CategoriaResource {
 	 * de uma resposta Http para um serviço REST
 	 * 
 	 */
+	
+	@RequestMapping(method=RequestMethod.POST)//Anotação para inserção
+	public ResponseEntity<Void> insert(@RequestBody Categoria obj){//@RequestBody -> converte Json para o objeto Categoria automaticamente
+		obj = service.insert(obj);
+		
+		//Pega a URI do novo recurso que foi inserido
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+	}
 	
 }

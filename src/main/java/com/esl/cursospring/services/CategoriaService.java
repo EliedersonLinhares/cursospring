@@ -24,7 +24,7 @@ public class CategoriaService {
 		
 		/*
 		 * Retorna o objeto se exitir ou jogar uma exceção caso não exista
-		 * usa-se uma função lambda para retronar a exceção
+		 * usa-se uma função lambda para retornar a exceção
 		 */
 		
 		
@@ -41,6 +41,12 @@ public class CategoriaService {
 		 * obj.orElse(null) ->  Se o objeto for encontrado ele vai ter sido instaciado, 
 		 * retorna o objeto. Se o objeto não for encontrado irá retornar o valor nulo
 		 */
+	}
+	
+	//metodo para inserção de dados
+	public Categoria insert(Categoria obj) {
+		obj.setId(null);
+		return repo.save(obj);
 	}
 	
 	
