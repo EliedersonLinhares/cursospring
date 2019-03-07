@@ -3,6 +3,8 @@ package com.esl.cursospring.resources;
 
 
 import java.net.URI;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.esl.cursospring.domain.Categoria;
+import com.esl.cursospring.dto.CategoriaDTO;
 import com.esl.cursospring.services.CategoriaService;
 
 @RestController //Anotação que determina que a classe vai ser um controlador rest
@@ -59,11 +62,44 @@ public class CategoriaResource {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@RequestMapping(value="/{id}", method=RequestMethod.DELETE) // Notação para apagar dados
+	@RequestMapping(value="/{id}", method=RequestMethod.DELETE) // Anotação para apagar dados
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 	    
 		service.delete(id);
 		return ResponseEntity.noContent().build();
+	
+	}
+	
+	@RequestMapping( method=RequestMethod.GET) // Metodo que implementa o retorno de todas as categorias
+	public ResponseEntity<List<CategoriaDTO>> findAll() {
+		
+		List<Categoria> list = service.findAll();//acessando o repository
+		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList()); //1
+		return ResponseEntity.ok().body(listDto);//retorna o ok com o corpo o objeto obj buscado
+	
+	/*
+	 * 1
+	 * 
+	 * Percorrendo a lista de categoria usando o Stream(Java 8)
+	 * 
+	 * list.stream()
+	 * 
+	 * usando o a Função Map que vai efetuar uma ação para cada elemento da Lista
+	 * 
+	 * list.stream().map
+	 * 
+	 * para cada elemento da lista é dado o apelido obj,
+	 * é criada um função anonima( -> ) que recebe um obj  instanciando (new) uma
+	 * nova categoriaDto passando o obj como argumento
+	 * 
+	 * list.stream().map(obj -> new CategoriaDTO(obj)
+	 * 
+	 * e agora é preciso voltar esse tipo obj para o tipo list usando o collect
+	 * 
+	 * list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList())
+	 * 
+	 */
+	
 	
 	}
 	
