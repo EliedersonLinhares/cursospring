@@ -7,6 +7,9 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.esl.cursospring.domain.Categoria;
@@ -73,5 +76,20 @@ public class CategoriaService {
 		return repo.findAll();
 	}
 	
+	public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
+	
+		//Objeto que prepara os dados para retonar a consulta com a pagina de dados, tambem é um metodo od SpringData
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		return repo.findAll(pageRequest);
+		
+	}
+	/*
+	 * A O metodo "Page" do Spring encapsula informções sobre a paginação, sendo que os dados nescessarios são
+	 * 
+	 * Page = Qual pagina é requerida
+	 * LinesPerPage = Quantas linhas por pagina(0,1,2,...)
+	 * OrderBy = Por qual atributo a lista vai ser ordenada (id,nomecategoria,...)
+	 * Direction = Por qual direção será ordenada ASC(ascendente) DESC(Descendente)
+	 */
 	
 }
