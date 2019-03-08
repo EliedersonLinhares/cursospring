@@ -13,6 +13,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.esl.cursospring.domain.Categoria;
+import com.esl.cursospring.dto.CategoriaDTO;
 import com.esl.cursospring.repositories.CategoriaRepository;
 import com.esl.cursospring.services.exceptions.DataIntegrityException;
 import com.esl.cursospring.services.exceptions.ObjectNotFoundException;
@@ -91,5 +92,11 @@ public class CategoriaService {
 	 * OrderBy = Por qual atributo a lista vai ser ordenada (id,nomecategoria,...)
 	 * Direction = Por qual direção será ordenada ASC(ascendente) DESC(Descendente)
 	 */
+	
+	public Categoria  fromDTO(CategoriaDTO objDto) {
+		return new Categoria(objDto.getId(), objDto.getNome());
+		
+		//Metodo auxiliar que instancia uma categoria a partir de uma categoriaDTO
+	}
 	
 }
