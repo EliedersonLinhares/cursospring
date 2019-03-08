@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -30,6 +32,27 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 	     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	     
 	}
+	
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)//anotado como tratador de excessões
+	public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
+
+		ValidationError err = new ValidationError(HttpStatus.BAD_REQUEST.value(), "Erro de validação", System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+		
+		/*
+		 * For para percorrer a lista de erros que tem nessa excessão "e", e para cada erro que estiver 
+		 * na lista de erros dessa excessão é gerado o objeto FieldMessage
+		 * 
+		 * e.getBindingResult().getFieldErrors() -> Acessa todos os campos de erros que aconteceram na escessão  MethodArgumentNotValidException
+		 */
+		for(FieldError x : e.getBindingResult().getFieldErrors()) {
+			err.addError(x.getField(), x.getDefaultMessage());
+		}
+		
+	     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	     
+	}
+	
 	/*
 	 * Handler para interceptar e tratar o erro de deleção de dados co risco de integridade
 	 */
