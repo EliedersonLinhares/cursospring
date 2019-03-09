@@ -58,8 +58,9 @@ public class CategoriaService {
 	
 	//metodo para atualização de dados
 	public Categoria update(Categoria obj) {
-		find(obj.getId());
-		return repo.save(obj);
+		Categoria newObj = find(obj.getId());//instaciando o cliente a partir do banco de dados
+		updateData(newObj, obj);//Atualiza o objto atual com base no objeto que veio como argumento
+		return repo.save(newObj);
 	}
 	
 	//metodo para deleção de dados
@@ -98,5 +99,10 @@ public class CategoriaService {
 		
 		//Metodo auxiliar que instancia uma categoria a partir de uma categoriaDTO
 	}
+	//Metodo auxiliar exclusivo dessa classe, não havendo nescessidade expor ele publicamente
+			private void updateData(Categoria newObj, Categoria obj) {//o Objeto buscado tera seus valores atualizados com o que for fornecido 
+				newObj.setNome(obj.getNome());
+				
+			}
 	
 }
