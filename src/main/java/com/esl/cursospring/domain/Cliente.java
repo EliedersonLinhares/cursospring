@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -32,7 +33,7 @@ public class Cliente implements Serializable {
 	/*Utilizando soment o @jsonIgnore no back reference
 	 * @JsonManagedReference //permitir a serialização de produtos, referencia gerenciada pelo jSon,sendo feito no lado que se quer que aparecam os objetos assossiados 
 	 */
-	@OneToMany(mappedBy="cliente")
+	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)//Cascade -> Instrução do JPA que determina o comportamento em cascata dessa relação,CascadeType.ALL -> Toda modificão feita no cliente será refletida no endereço
 	private List<Endereco> enderecos = new ArrayList<>();
 	
 	@JsonIgnore
