@@ -2,6 +2,7 @@ package com.esl.cursospring.resources;
 
 
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.esl.cursospring.domain.Cliente;
 import com.esl.cursospring.dto.ClienteDTO;
+import com.esl.cursospring.dto.ClienteNewDTO;
 import com.esl.cursospring.services.ClienteService;
 
 @RestController //Anotação que determina que a classe vai ser um controlador rest
@@ -27,6 +30,20 @@ public class ClienteResource {
 
 	@Autowired
 	private ClienteService service;
+	
+	
+	@RequestMapping(method=RequestMethod.POST)//Anotação para inserção
+	public ResponseEntity<Void> insert(@Valid@RequestBody ClienteNewDTO objDto){//@RequestBody -> converte Json para o objeto Categoria automaticamente
+		
+		Cliente obj = service.fromDTO(objDto);
+		
+		obj = service.insert(obj);
+		
+		//Pega a URI do novo recurso que foi inserido
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).build();
+	}
 	
 	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET) // http para obter dados

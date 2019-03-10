@@ -11,10 +11,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.esl.cursospring.domain.Cidade;
 import com.esl.cursospring.domain.Cliente;
+import com.esl.cursospring.domain.Endereco;
+import com.esl.cursospring.domain.enums.TipoCliente;
 import com.esl.cursospring.dto.ClienteDTO;
+import com.esl.cursospring.dto.ClienteNewDTO;
 import com.esl.cursospring.repositories.ClienteRepository;
+import com.esl.cursospring.repositories.EnderecoRepository;
 import com.esl.cursospring.services.exceptions.DataIntegrityException;
 import com.esl.cursospring.services.exceptions.ObjectNotFoundException;
 
@@ -23,6 +29,10 @@ public class ClienteService {
 
 	@Autowired //Automaticamente instaciada pelo spring, injeção de depêndencia
 	private ClienteRepository repo;
+	
+	@Autowired
+	private EnderecoRepository enderecoRepository;
+	
 	
 	public Cliente find(Integer id) {
 		Optional<Cliente> obj = repo.findById(id);
@@ -50,6 +60,18 @@ public class ClienteService {
 		 */
 
 	}
+	
+	
+	//metodo para inserção de dados
+	@Transactional
+		public Cliente insert(Cliente obj) {
+			obj.setId(null);
+			obj = repo.save(obj);
+			enderecoRepository.saveAll(obj.getEnderecos());//Salvando os endereços junto ao insert de clientes
+			
+			return obj;
+			
+		}
 	
 	//metodo para atualização de dados
 		public Cliente update(Cliente obj) {
@@ -94,6 +116,29 @@ public class ClienteService {
 			
 			//Metodo auxiliar que instancia uma categoria a partir de uma categoriaDTO
 		}
+		
+		//Metodo sobrecarregado do FromDTO a partir do ClienteNewDTO
+		public Cliente fromDTO(ClienteNewDTO objDto){
+			//Instanciando os dados a partir do tipo ClienteNewDTO, Clinte,Cidade e Endereço
+			Cliente cli = new Cliente(null, objDto.getNome(), objDto.getEmail(),objDto.getCpfOuCnpj(), TipoCliente.toEnum(objDto.getTipo()));
+			Cidade cid = new Cidade(objDto.getCidadeId(), null, null);
+			Endereco end = new Endereco(null, objDto.getLogradouro(), objDto.getNumero(), objDto.getComplemento(), objDto.getBairro(), objDto.getCep(), cli, cid);
+			
+			//Cliente conhece seus endereços
+			cli.getEnderecos().add(end);
+			//Cliente conhece seus telefones
+			cli.getTelefones().add(objDto.getTelefone1());//obrigatorio ter ao menos um telefone
+			//Testa se a pessoa inseriu o telefone 2, se sim, adiciona ao BD 
+			if(objDto.getTelefone2()!=null) {
+				cli.getTelefones().add(objDto.getTelefone2());
+			}
+			//...
+			if(objDto.getTelefone3()!=null) {
+				cli.getTelefones().add(objDto.getTelefone3());
+			}
+			return cli;
+		}
+		
 	
 		//Metodo auxiliar exclusivo dessa classe, não havendo nescessidade expor ele publicamente
 		private void updateData(Cliente newObj, Cliente obj) {//o Objeto buscado tera seus valores atualizados com o que for fornecido 
