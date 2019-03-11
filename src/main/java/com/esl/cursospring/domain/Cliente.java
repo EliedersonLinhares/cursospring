@@ -33,7 +33,13 @@ public class Cliente implements Serializable {
 	/*Utilizando soment o @jsonIgnore no back reference
 	 * @JsonManagedReference //permitir a serialização de produtos, referencia gerenciada pelo jSon,sendo feito no lado que se quer que aparecam os objetos assossiados 
 	 */
-	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)//Cascade -> Instrução do JPA que determina o comportamento em cascata dessa relação,CascadeType.ALL -> Toda modificão feita no cliente será refletida no endereço
+	/*
+	 * Usada quando sua regra de negocio permitir a deleção em cascata, o JPA fara todo o processo
+	 * Cascade -> Instrução do JPA que determina o comportamento em cascata 
+	 * dessa relação,CascadeType.
+	 * ALL -> Toda modificão feita no cliente será refletida no endereço
+	 */
+	@OneToMany(mappedBy="cliente", cascade=CascadeType.ALL)
 	private List<Endereco> enderecos = new ArrayList<>();
 	
 	@JsonIgnore
