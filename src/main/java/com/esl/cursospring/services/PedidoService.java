@@ -2,12 +2,19 @@ package com.esl.cursospring.services;
 
 
 
+import java.util.Date;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.esl.cursospring.domain.ItemPedido;
+import com.esl.cursospring.domain.PagamentoComBoleto;
 import com.esl.cursospring.domain.Pedido;
+import com.esl.cursospring.domain.enums.EstadoPagamento;
+import com.esl.cursospring.repositories.ItemPedidoRepository;
+import com.esl.cursospring.repositories.PagamentoRepository;
 import com.esl.cursospring.repositories.PedidoRepository;
 import com.esl.cursospring.services.exceptions.ObjectNotFoundException;
 
@@ -16,6 +23,18 @@ public class PedidoService {
 
 	@Autowired //Automaticamente instaciada pelo spring, injeção de depêndencia
 	private PedidoRepository repo;
+	
+	@Autowired
+	private BoletoService boletoService;
+	
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
+	
+	@Autowired
+	private ProdutoService produtoService;
+	
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public Pedido find(Integer id) {
 		Optional<Pedido> obj = repo.findById(id);
@@ -41,6 +60,31 @@ public class PedidoService {
 		 * obj.orElse(null) ->  Se o objeto for encontrado ele vai ter sido instaciado, 
 		 * retorna o objeto. Se o objeto não for encontrado irá retornar o valor nulo
 		 */
+	}
+	
+	@Transactional
+	public Pedido insert(Pedido obj) {
+		
+		obj.setId(null);
+		obj.setInstante(new Date());
+		obj.getPagamento().setEstado(EstadoPagamento.PENDENTE);
+		obj.getPagamento().setPedido(obj);
+		
+		if(obj.getPagamento() instanceof PagamentoComBoleto) {// Se o tipo de pagamento for do tipo pagamento com boleto
+			PagamentoComBoleto pagto = (PagamentoComBoleto) obj.getPagamento();//defini pagto com tipo PagamentoComBoleto
+			boletoService.preencherPagamentoComBoleto(pagto, obj.getInstante());
+		}
+		
+		obj = repo.save(obj); // salva o pedido
+		pagamentoRepository.save(obj.getPagamento()); //salva o pagamento
+	    
+		for(ItemPedido ip : obj.getItens()) {//percorre todos os ItensPedidos associados ao obj
+			ip.setDesconto(0.0);
+			ip.setPreco(produtoService.find(ip.getProduto().getId()).getPreco());//preço vem do produto pelo id
+			ip.setPedido(obj);
+		}
+	    itemPedidoRepository.saveAll(obj.getItens()); //salva os itens
+	    return obj;
 	}
 	
 	

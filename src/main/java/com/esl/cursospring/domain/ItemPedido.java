@@ -33,6 +33,11 @@ public class ItemPedido implements Serializable {
 		this.preco = preco;
 	}
 
+	//Metodo para retornar o total parcial de um item no carrinho
+	public double getSubTotal() {
+		return(preco - desconto) * quantidade;
+	}
+	
 	/*
 	 *Será colocados os Gets para produto para que se tenha acesso direto 
 	 *aos mesmos fora da classe ItemPedido
@@ -42,8 +47,21 @@ public class ItemPedido implements Serializable {
 		return id.getPedido();
 	}
  
+	/*
+	 * Nescessario implemntar o set de pedido e produto 
+	 * para que itemPedidos possa definir o pedido e o 
+	 * produto que estarão associados a ele
+	 */
+	public void setPedido(Pedido pedido) {
+		id.setPedido(pedido);
+	}
+	
 	public Produto getProduto() {
 		return id.getProduto();
+	}
+	
+	public void setProduto(Produto produto) {
+		id.setProduto(produto);
 	}
 	
 	

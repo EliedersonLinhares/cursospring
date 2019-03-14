@@ -64,7 +64,21 @@ public class Pedido implements Serializable {
 		this.cliente = cliente;
 		this.enderecoDeEntrega = enderecoDeEntrega;
 	}
-
+   
+	/*
+	 * Exemplo de criação de operações dentro da classe de dominio, de modo
+	 * que cada classe seja responsavel por ações reladcionadas a ela
+	 */
+	//Metodo paara retorna a soma dos itens do pedido
+	public double getValorTotal() {
+		double soma = 0.0;
+		for(ItemPedido ip :itens) {
+			soma = soma + ip.getSubTotal();
+		}
+		return soma;
+	}
+	
+	
 	public Integer getId() {
 		return id;
 	}
