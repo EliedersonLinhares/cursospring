@@ -38,5 +38,6 @@ public class DevConfig {
 	 * executados somente quando o profile de desenvolvimento 
 	 * estiver ativo no 
 	 * application.properties
+	 * 
 	 */
 }
