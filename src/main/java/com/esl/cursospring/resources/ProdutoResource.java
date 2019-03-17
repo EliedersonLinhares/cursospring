@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.esl.cursospring.domain.Produto;
-import com.esl.cursospring.dto.CategoriaDTO;
 import com.esl.cursospring.dto.ProdutoDTO;
 import com.esl.cursospring.resources.utils.URL;
 import com.esl.cursospring.services.ProdutoService;

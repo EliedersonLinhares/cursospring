@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.esl.cursospring.domain.Categoria;
 import com.esl.cursospring.domain.Pedido;
-import com.esl.cursospring.dto.CategoriaDTO;
 import com.esl.cursospring.services.PedidoService;
 
 @RestController //Anotação que determina que a classe vai ser um controlador rest
