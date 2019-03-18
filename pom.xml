@@ -47,11 +47,17 @@
 		<artifactId>spring-boot-devtools</artifactId>
 	</dependency>
 		
-<dependency>
+		<dependency>
+    <groupId>org.mariadb.jdbc</groupId>
+    <artifactId>mariadb-java-client</artifactId>
+     </dependency>
+     
+     <!--  Para produção no heroku usar o Mysql connector 
+     <dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-		</dependency>	
-		
+		</dependency>
+		-->
 	</dependencies>
 
 	<build>
