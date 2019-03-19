@@ -94,7 +94,7 @@ public class PedidoService {
 		}
 	    itemPedidoRepository.saveAll(obj.getItens()); //salva os itens
 	    
-	    emailService.sendOrderConfirmation(obj);//precisa ser instanciada no TestConfig
+	    emailService.sendOrderConfirmationHtmlEmail(obj);//precisa ser instanciada no TestConfig
 	    
 	    return obj;
 	}
