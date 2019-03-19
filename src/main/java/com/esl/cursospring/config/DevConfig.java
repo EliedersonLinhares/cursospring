@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.esl.cursospring.services.DBService;
+import com.esl.cursospring.services.EmailService;
+import com.esl.cursospring.services.SmtpEmailService;
 
 @Configuration
 @Profile("dev")
@@ -32,6 +34,10 @@ public class DevConfig {
 		return true;
 	}
 	
+	@Bean
+	public EmailService emailService() {
+		return new SmtpEmailService();
+	}
 	
 	/*@Profile("dev")
 	 * Especifica que todos os beans que estiverem nessa classe serão 
