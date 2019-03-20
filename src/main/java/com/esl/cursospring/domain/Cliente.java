@@ -33,6 +33,9 @@ public class Cliente implements Serializable {
 	private String cpfOuCnpj;
 	private Integer tipo;//Armazenado internamente um numero inteiro ao inves de um tipo cliente, sendo qeu para o sistema o dado exposto é um tipocliente
 	
+	@JsonIgnore //Não exibir a senha durante o get de cliente
+	private String senha;
+	
 	/*Utilizando soment o @jsonIgnore no back reference
 	 * @JsonManagedReference //permitir a serialização de produtos, referencia gerenciada pelo jSon,sendo feito no lado que se quer que aparecam os objetos assossiados 
 	 */
@@ -64,13 +67,14 @@ public class Cliente implements Serializable {
 		
 	}
 
-	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
+	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo, String senha ) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
 		this.tipo = (tipo==null) ? null : tipo.getCod();//Só pega o codigo
+		this.senha = senha;
 	}
 
 	public Integer getId() {
@@ -137,6 +141,14 @@ public class Cliente implements Serializable {
 		this.pedidos = pedidos;
 	}
 	
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
 
 	@Override
 	public int hashCode() {
@@ -162,6 +174,7 @@ public class Cliente implements Serializable {
 			return false;
 		return true;
 	}
+
 
 
 	
