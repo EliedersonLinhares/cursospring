@@ -7,21 +7,36 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.esl.cursospring.security.JWTAuthenticationFilter;
+import com.esl.cursospring.security.JWTUtil;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
+	/*
+	 * è injetado a interface UserDetailsService, o Spring consegue buscar a
+	 * implementação dessa classe a UserDetailsServiceImpl injetando uma instancia dela
+	 */
+	@Autowired
+	private UserDetailsService userDetailsService;
+	
 	@Autowired
 	private Environment env;
+	
+	@Autowired
+	private JWTUtil jwtUtil;
 
 	private static final String[] PUBLIC_MATCHERS = {//Definindo um vetor com os caminhos que por padrão estarão liberados
 	
@@ -56,8 +71,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		            .antMatchers(HttpMethod.GET,PUBLIC_MATCHERS_GET).permitAll()//Permitir somente o metodo GET(leitura) nos caminhos definidos nesse vetor, não podendo altera-los
 		            .antMatchers(PUBLIC_MATCHERS).permitAll()//Permissão publica a todos os endpoints do vetor
 		            .anyRequest().authenticated();//para todos os outros precisa de autenticação
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));//Disponivel depois de feito o filtro de login
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);//Assegura que o backend não irá criar uma sessão de usuário
 	}
+	
+	public void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+		//defini que em é o userDetailsService e o passwordEncoder
+	}
+	
 	
 	@Bean
 	  CorsConfigurationSource corsConfigurationSource() {
