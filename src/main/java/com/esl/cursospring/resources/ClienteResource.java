@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -63,6 +64,7 @@ public class ClienteResource {
 			return ResponseEntity.noContent().build();
 		}
 		
+		@PreAuthorize("hasAnyRole('ADMIN')")//Anotação para permitir o acesso por um tipo especifico de usuario
 		@RequestMapping(value="/{id}", method=RequestMethod.DELETE) // Anotação para apagar dados
 		public ResponseEntity<Void> delete(@PathVariable Integer id) {
 		    
@@ -71,6 +73,7 @@ public class ClienteResource {
 		
 		}
 		
+		@PreAuthorize("hasAnyRole('ADMIN')")//Anotação para permitir o acesso por um tipo especifico de usuario
 		@RequestMapping( method=RequestMethod.GET) // Metodo que implementa o retorno de todas as categorias
 		public ResponseEntity<List<ClienteDTO>> findAll() {
 			
@@ -102,6 +105,7 @@ public class ClienteResource {
 		 */
 		}
 		
+		@PreAuthorize("hasAnyRole('ADMIN')")//Anotação para permitir o acesso por um tipo especifico de usuario
 		@RequestMapping( value="/page",method=RequestMethod.GET) // Metodo que implementa o retorno de todas as categorias de modo Lazy
 		public ResponseEntity<Page<ClienteDTO>> findPage(
 	            @RequestParam(value="page", defaultValue="0") Integer page, 

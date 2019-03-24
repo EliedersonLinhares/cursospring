@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,6 +50,7 @@ public class CategoriaResource {
 	 * 
 	 */
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")//Anotação para permitir o acesso por um tipo especifico de usuario
 	@RequestMapping(method=RequestMethod.POST)//Anotação para inserção
 	public ResponseEntity<Void> insert(@Valid@RequestBody CategoriaDTO objDto){//@RequestBody -> converte Json para o objeto Categoria automaticamente
 		
@@ -62,7 +64,9 @@ public class CategoriaResource {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	
 	//@Valid -> indica uma validação pelo spring
+	@PreAuthorize("hasAnyRole('ADMIN')")//Anotação para permitir o acesso por um tipo especifico de usuario
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)//Anotação para atualização
 	public ResponseEntity<Void> update(@Valid@RequestBody CategoriaDTO objDto, @PathVariable Integer id){
 		Categoria obj = service.fromDTO(objDto);
@@ -71,6 +75,7 @@ public class CategoriaResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+	@PreAuthorize("hasAnyRole('ADMIN')")//Anotação para permitir o acesso por um tipo especifico de usuario
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE) // Anotação para apagar dados
 	public ResponseEntity<Void> delete(@PathVariable Integer id) {
 	    

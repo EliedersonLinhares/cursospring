@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -24,6 +25,7 @@ import com.esl.cursospring.security.JWTUtil;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)//Anotação usada para permitir o uso de perfis nos endpoints
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	/*
@@ -48,7 +50,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private static final String[] PUBLIC_MATCHERS_GET = {//Definindo um vetor com os caminhos que permitem somente a leitura
 		
 			"/produtos/**",
-			"/categorias/**",
+			"/categorias/**"
+	               
+	};
+	
+	private static final String[] PUBLIC_MATCHERS_POST = {//Definindo um vetor com os caminhos que permitem a inserção especifica
+			
 			"/clientes/**"
 	               
 	};
@@ -69,6 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.cors().and().csrf().disable();//1//Se tiver um CorsConfiguration definido as suas configurções serão aplicadas
 		http.authorizeRequests()
+		            .antMatchers(HttpMethod.GET,PUBLIC_MATCHERS_POST).permitAll()
 		            .antMatchers(HttpMethod.GET,PUBLIC_MATCHERS_GET).permitAll()//Permitir somente o metodo GET(leitura) nos caminhos definidos nesse vetor, não podendo altera-los
 		            .antMatchers(PUBLIC_MATCHERS).permitAll()//Permissão publica a todos os endpoints do vetor
 		            .anyRequest().authenticated();//para todos os outros precisa de autenticação
