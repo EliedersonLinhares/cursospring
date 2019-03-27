@@ -1,6 +1,6 @@
 package com.esl.cursospring.services.exceptions;
 
-public class ObjectNotFoundException extends RuntimeException {//exceção personlizada
+public class ObjectNotFoundException extends RuntimeException {//exceção personalizada
 
 	private static final long serialVersionUID = 1L;
 

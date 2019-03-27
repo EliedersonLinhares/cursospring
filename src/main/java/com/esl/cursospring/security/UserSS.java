@@ -77,4 +77,10 @@ public class UserSS implements UserDetails{//Classe que defini metdos para auten
 		return true;
 	}
 
+	public boolean hasRole(Perfil perfil) {
+		//Testa se um usuario tem um determinado perfil, covertendo String perfil em um SimpleGrantedAuthority
+		return getAuthorities().contains(new SimpleGrantedAuthority(perfil.getDescricao()));
+		
+	}
+	
 }

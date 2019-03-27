@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.esl.cursospring.services.exceptions.AuthorizationException;
 import com.esl.cursospring.services.exceptions.DataIntegrityException;
 import com.esl.cursospring.services.exceptions.ObjectNotFoundException;
 
@@ -52,6 +53,19 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 	     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	     
 	}
+	
+	//handler para acesso não autorizado
+	@ExceptionHandler(AuthorizationException.class)//anotado como tratador de excessões
+	public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
+
+		StandardError err = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+		
+	     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
+	     
+	}    
+	
+	
+	
 	
 	/*
 	 * Handler para interceptar e tratar o erro de deleção de dados co risco de integridade

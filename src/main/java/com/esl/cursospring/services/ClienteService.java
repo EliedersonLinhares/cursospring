@@ -17,11 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 import com.esl.cursospring.domain.Cidade;
 import com.esl.cursospring.domain.Cliente;
 import com.esl.cursospring.domain.Endereco;
+import com.esl.cursospring.domain.enums.Perfil;
 import com.esl.cursospring.domain.enums.TipoCliente;
 import com.esl.cursospring.dto.ClienteDTO;
 import com.esl.cursospring.dto.ClienteNewDTO;
 import com.esl.cursospring.repositories.ClienteRepository;
 import com.esl.cursospring.repositories.EnderecoRepository;
+import com.esl.cursospring.security.UserSS;
+import com.esl.cursospring.services.exceptions.AuthorizationException;
 import com.esl.cursospring.services.exceptions.DataIntegrityException;
 import com.esl.cursospring.services.exceptions.ObjectNotFoundException;
 
@@ -38,7 +41,20 @@ public class ClienteService {
 	private BCryptPasswordEncoder pe;
 	
 	
+	
+	
 	public Cliente find(Integer id) {
+		
+		UserSS user = UserService.authenticated();
+		/*
+		 * Se for igual a nulo e não tem o perfil de administrador e seu id é 
+		 * diferente do id do usuario logado, joga a excessão personalizada
+		 */
+		if(user==null || !user.hasRole(Perfil.ADMIN) && !id.equals(user.getId())){
+			throw new AuthorizationException("Acesso Negado");
+		}
+		
+		
 		Optional<Cliente> obj = repo.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
 		"Objeto não encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
