@@ -54,10 +54,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	               
 	};
 	
-	private static final String[] PUBLIC_MATCHERS_POST = {//Definindo um vetor com os caminhos que permitem a inserção especifica
+	private static final String[] PUBLIC_MATCHERS_POST = {//Definindo um vetor com os caminhos que permitem inserção
 			
-			"/clientes/**"
-	               
+			"/clientes/**",
+			"/auth/forgot/**"
 	};
 	
 	@Override
@@ -76,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.cors().and().csrf().disable();//1//Se tiver um CorsConfiguration definido as suas configurções serão aplicadas
 		http.authorizeRequests()
-		            .antMatchers(HttpMethod.GET,PUBLIC_MATCHERS_POST).permitAll()
+		            .antMatchers(HttpMethod.POST,PUBLIC_MATCHERS_POST).permitAll()
 		            .antMatchers(HttpMethod.GET,PUBLIC_MATCHERS_GET).permitAll()//Permitir somente o metodo GET(leitura) nos caminhos definidos nesse vetor, não podendo altera-los
 		            .antMatchers(PUBLIC_MATCHERS).permitAll()//Permissão publica a todos os endpoints do vetor
 		            .anyRequest().authenticated();//para todos os outros precisa de autenticação
