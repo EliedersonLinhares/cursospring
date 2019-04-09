@@ -67,6 +67,9 @@ public class Cliente implements Serializable {
 	private Set<String> telefones = new HashSet<>();
 	
 	
+	private String imageUrl;
+	
+	
 	@ElementCollection(fetch=FetchType.EAGER)//garante que os perfis sempre serão buscados junto com o cliente
 	@CollectionTable(name="PERFIS")
 	private Set<Integer> perfis = new HashSet<>();
@@ -193,6 +196,14 @@ public class Cliente implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
 	}
 
 
