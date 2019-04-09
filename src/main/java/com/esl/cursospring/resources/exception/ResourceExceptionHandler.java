@@ -9,8 +9,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.esl.cursospring.services.exceptions.AuthorizationException;
 import com.esl.cursospring.services.exceptions.DataIntegrityException;
+import com.esl.cursospring.services.exceptions.FileException;
 import com.esl.cursospring.services.exceptions.ObjectNotFoundException;
 
 @ControllerAdvice //Anotação que permite que se escreva um codigo global para ser aplicado a diferentes controlers ref: https://dzone.com/articles/global-exception-handling-with-controlleradvice
@@ -62,12 +66,52 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 		
 	     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
 	     
-	}    
-	
-	
-	
-	
+	}
 	/*
 	 * Handler para interceptar e tratar o erro de deleção de dados co risco de integridade
 	 */
+	
+	
+	
+	//handler para o upload de imagens
+		@ExceptionHandler(FileException.class)//anotado como tratador de excessões
+		public ResponseEntity<StandardError> file(FileException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
+
+			StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+			
+		     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+		     
+		}
+		
+		//handler para o amazon service
+				@ExceptionHandler(AmazonServiceException.class)//anotado como tratador de excessões
+				public ResponseEntity<StandardError> AmazonService(AmazonServiceException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
+
+					HttpStatus code = HttpStatus.valueOf(e.getErrorCode());
+					
+					StandardError err = new StandardError(code.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+					
+				     return ResponseEntity.status(code).body(err);
+				     
+				}   
+				
+				//handler para o amazon client
+				@ExceptionHandler(AmazonClientException.class)//anotado como tratador de excessões
+				public ResponseEntity<StandardError> AmazonClient(AmazonClientException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
+
+					StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+					
+				     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+				     
+				}	
+				//handler para o amazon client
+				@ExceptionHandler(AmazonS3Exception.class)//anotado como tratador de excessões
+				public ResponseEntity<StandardError> AmazonS3(AmazonClientException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
+
+					StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+					
+				     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+				     
+				}	
+				
 }
