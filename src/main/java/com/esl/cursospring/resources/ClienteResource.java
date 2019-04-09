@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.esl.cursospring.domain.Cliente;
@@ -131,5 +132,15 @@ public class ClienteResource {
 		 * 	
 		 */
 			
+		}
+		
+		
+		@RequestMapping(value="/picture", method=RequestMethod.POST)//Anotação para inserção
+		public ResponseEntity<Void> uploadProfilePicture(@RequestParam(name="file") MultipartFile file){//@RequestBody -> converte Json para o objeto Categoria automaticamente
+			
+			URI uri = service.uploadProfilePicture(file);
+			
+			
+			return ResponseEntity.created(uri).build();
 		}
 }

@@ -56,7 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	private static final String[] PUBLIC_MATCHERS_POST = {//Definindo um vetor com os caminhos que permitem inserção
 			
-			"/clientes/**",
+			"/clientes",
+			"/clientes/picture",
 			"/auth/forgot/**"
 	};
 	
