@@ -50,8 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	private static final String[] PUBLIC_MATCHERS_GET = {//Definindo um vetor com os caminhos que permitem somente a leitura
 		
 			"/produtos/**",
-			"/categorias/**"
-	               
+			"/categorias/**",
+	         "/estados/**"      
 	};
 	
 	private static final String[] PUBLIC_MATCHERS_POST = {//Definindo um vetor com os caminhos que permitem inserção
