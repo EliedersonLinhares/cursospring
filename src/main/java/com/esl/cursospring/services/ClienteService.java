@@ -125,6 +125,24 @@ public class ClienteService {
 			return repo.findAll();
 		}
 		
+		
+		public Cliente findByEmail(String email) {
+			
+			UserSS user = UserService.authenticated();//Acessa que é o usuario autenticado
+			if(user==null || !user.hasRole(Perfil.ADMIN) && !email.equals(user.getUsername())) {//usuario nulo ou não for admin e não for o email do usuario logado
+				throw new AuthorizationException("Acesso negado");
+			}
+			Cliente obj = repo.findByEmail(email);
+			if(obj == null) {
+				throw new ObjectNotFoundException(
+						"Objeto não encontrado! Id: " + user.getId() + ", Tipo: " + Cliente.class.getName());
+			}
+			
+			return obj;
+		}
+		
+		
+		
 		public Page<Cliente> findPage(Integer page, Integer linesPerPage, String orderBy, String direction){
 		
 			//Objeto que prepara os dados para retonar a consulta com a pagina de dados, tambem é um metodo od SpringData

@@ -48,6 +48,16 @@ public class ClienteResource {
 	}
 	
 	
+	@RequestMapping(value="/email", method=RequestMethod.GET) // http para obter dados
+	public ResponseEntity<Cliente> find(@RequestParam(value="value") String email) {//email como parametro
+		
+		Cliente obj = service.findByEmail(email);//acessando o repository
+		
+		return ResponseEntity.ok().body(obj);//retorna o ok com o corpo o objeto obj buscado
+	}
+	
+	
+	
 	@RequestMapping(value="/{id}", method=RequestMethod.GET) // http para obter dados
 	public ResponseEntity<Cliente> find(@PathVariable Integer id) {
 		
