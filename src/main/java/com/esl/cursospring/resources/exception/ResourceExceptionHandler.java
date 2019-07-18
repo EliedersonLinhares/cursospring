@@ -23,7 +23,8 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 	@ExceptionHandler(ObjectNotFoundException.class)//anotado como tratador de excessões
 	public ResponseEntity<StandardError> objectNotFound(ObjectNotFoundException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
 
-		StandardError err = new StandardError(HttpStatus.NOT_FOUND.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+		StandardError err = new StandardError(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(), "Não encontrado", e.getMessage(), request.getRequestURI());//novo formato padronizado
+				//passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
 		
 	     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(err);
 	     
@@ -32,7 +33,7 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 	@ExceptionHandler(DataIntegrityException.class)//anotado como tratador de excessões
 	public ResponseEntity<StandardError> dataIntegrity(DataIntegrityException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
 
-		StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+		StandardError err = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Integridade de dados", e.getMessage(), request.getRequestURI());//novo formato padronizado
 		
 	     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 	     
@@ -42,7 +43,8 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 	@ExceptionHandler(MethodArgumentNotValidException.class)//anotado como tratador de excessões
 	public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
 
-		ValidationError err = new ValidationError(HttpStatus.BAD_REQUEST.value(), "Erro de validação", System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+		
+		ValidationError err = new ValidationError(System.currentTimeMillis(), HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro de validação", e.getMessage(), request.getRequestURI());//novo formato padronizado
 		
 		/*
 		 * For para percorrer a lista de erros que tem nessa excessão "e", e para cada erro que estiver 
@@ -54,7 +56,7 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 			err.addError(x.getField(), x.getDefaultMessage());
 		}
 		
-	     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
+	     return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(err);
 	     
 	}
 	
@@ -62,7 +64,7 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 	@ExceptionHandler(AuthorizationException.class)//anotado como tratador de excessões
 	public ResponseEntity<StandardError> authorization(AuthorizationException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
 
-		StandardError err = new StandardError(HttpStatus.FORBIDDEN.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+		StandardError err = new StandardError(System.currentTimeMillis(), HttpStatus.FORBIDDEN.value(), "Acesso Negado", e.getMessage(), request.getRequestURI());//novo formato padronizado
 		
 	     return ResponseEntity.status(HttpStatus.FORBIDDEN).body(err);
 	     
@@ -77,7 +79,7 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 		@ExceptionHandler(FileException.class)//anotado como tratador de excessões
 		public ResponseEntity<StandardError> file(FileException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
 
-			StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+			StandardError err = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Erro de arquivo", e.getMessage(), request.getRequestURI());//novo formato padronizado
 			
 		     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 		     
@@ -89,7 +91,7 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 
 					HttpStatus code = HttpStatus.valueOf(e.getErrorCode());
 					
-					StandardError err = new StandardError(code.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+					StandardError err = new StandardError(System.currentTimeMillis(), code.value(), "Erro Amazon Service", e.getMessage(), request.getRequestURI());//novo formato padronizado
 					
 				     return ResponseEntity.status(code).body(err);
 				     
@@ -99,7 +101,7 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 				@ExceptionHandler(AmazonClientException.class)//anotado como tratador de excessões
 				public ResponseEntity<StandardError> AmazonClient(AmazonClientException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
 
-					StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+					StandardError err = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Erro Amazon Client", e.getMessage(), request.getRequestURI());//novo formato padronizado
 					
 				     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 				     
@@ -108,7 +110,7 @@ public class ResourceExceptionHandler { //classe auxiliar que intercepta as exce
 				@ExceptionHandler(AmazonS3Exception.class)//anotado como tratador de excessões
 				public ResponseEntity<StandardError> AmazonS3(AmazonClientException e, HttpServletRequest  request){//Metodo que recebe a exceção,com as informações da requisição
 
-					StandardError err = new StandardError(HttpStatus.BAD_REQUEST.value(), e.getMessage(), System.currentTimeMillis()); //passar os dados do erro; HttpStatus.NOT_FOUND(erro 204)
+					StandardError err = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(), "Erro S3", e.getMessage(), request.getRequestURI());//novo formato padronizado
 					
 				     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
 				     
